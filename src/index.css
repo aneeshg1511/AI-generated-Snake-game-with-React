@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Silkscreen:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-pixel: "Silkscreen", "DotGothic16", monospace;
+  --font-mono: "DotGothic16", monospace;
+  
+  --color-bg: #050505;
+  --color-cyan-glitch: #00ffff;
+  --color-magenta-glitch: #ff00ff;
+  --color-surface: #101010;
+  --color-text-dim: #666666;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-cyan-glitch font-pixel overflow-hidden h-screen cursor-crosshair;
+    background-image: 
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+      linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+  }
+
+  /* Scanline effect */
+  body::before {
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0.1) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.05), rgba(0, 255, 0, 0.05), rgba(0, 0, 255, 0.05));
+    z-index: 100;
+    background-size: 100% 2px, 3px 100%;
+    pointer-events: none;
+    opacity: 0.15;
+  }
+}
+
+@layer utilities {
+  .glitch-text {
+    position: relative;
+    text-shadow: 2px 0 var(--color-magenta-glitch), -2px 0 var(--color-cyan-glitch);
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+  }
+
+  .tear-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tear-effect::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(transparent 50%, rgba(255, 0, 255, 0.1) 50%);
+    background-size: 100% 10px;
+    animation: tear-move 4s steps(10) infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0); text-shadow: 2px 0 var(--color-magenta-glitch), -2px 0 var(--color-cyan-glitch); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); text-shadow: -2px 0 var(--color-magenta-glitch), 2px 0 var(--color-cyan-glitch); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); text-shadow: 2px 0 var(--color-magenta-glitch), -2px 0 var(--color-cyan-glitch); }
+}
+
+@keyframes tear-move {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+/* Red-cyan separation on edges */
+.rgb-split {
+  filter: drop-shadow(2px 0 0 rgba(255,0,255,0.7)) drop-shadow(-2px 0 0 rgba(0,255,255,0.7));
+}
